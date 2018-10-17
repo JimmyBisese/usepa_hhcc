@@ -1,0 +1,169 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta http-equiv="3DContent-Type" content="text/html;" />
+	<link rel="icon" href="./favicon.ico">
+	<title>HH Criteria Calculator</title>
+	<link type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/datatables/1.10.1/css/jquery.dataTables_themeroller.css" rel="stylesheet" />
+    <link type="text/css" href="//code.jquery.com/ui/1.9.1/themes/redmond/jquery-ui.css" rel="stylesheet" />
+    <link type="text/css" href="//cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css" rel="stylesheet" />
+	<link type="text/css" href="//cdn.datatables.net/buttons/1.2.2/css/buttons.dataTables.min.css" rel="stylesheet" />
+	<link type="text/css" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css" rel="stylesheet" >
+	
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+
+    <script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" language="javascript" src="//cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
+	<script type="text/javascript" language="javascript" src="//cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
+	<script type="text/javascript" language="javascript" src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+	<script type="text/javascript" language="javascript" src="//cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+	<script type="text/javascript" language="javascript" src="//cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+	<script type="text/javascript" language="javascript" src="//cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
+	<script type="text/javascript" language="javascript" src="//cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
+	
+    <script type="text/javascript" src="data.js"></script>
+
+	<style media="screen" type="text/css">
+		.HOLDtable{
+		  margin: 110 auto;
+		  width: 100%;
+		  clear: both;
+		  border-collapse: collapse;
+		  table-layout: fixed; // ***********add this
+		  word-wrap:break-word; // ***********and this
+		}
+
+		.footer-items a:link {
+		    color: #369;
+		    text-decoration: underline;
+		}
+		/* visited link */
+		.footer-items a:visited {
+		    color: #4d8e4d;
+		}
+		
+		/* mouse over link */
+		.footer-items a:hover {
+		    color: #58b;
+		    text-decoration: none;
+		}
+		
+		/* selected link */
+		.footer-items a:active {
+		    color: blue;
+		    text-decoration: none;
+		}
+	</style>
+
+</head>
+
+<body>
+	<h1>National Recommended Water Quality Criteria - Human Health Criteria Calculator</h1>
+	<span style="display:inline-block; width: 850px;">
+	Human health ambient water quality criteria represent specific levels of chemicals or conditions 
+	in a water body that are not expected to cause adverse effects to human health. 
+	EPA provides recommendations for "water + organism" and "organism only" human health criteria for states 
+	and authorized tribes to consider when adopting criteria into their water quality standards. 
+	These human health criteria are developed by EPA under Section 304(a) of the Clean Water Act.
+
+	</span>
+	<br>
+	<br>
+	<div style="display:inline-block; vertical-align: top;">
+		<strong>Fish Consumption Rate</strong> <br>
+
+			<input type="radio"  name="ddlConsumptionRate" value="22" checked="checked">22 grams per day - EPA's national human health criteria default rate<br>
+			<input type="radio"  name="ddlConsumptionRate" value="142.4">142.4 grams per day - EPA's default 'subsistence' rate<br>
+			<input type="radio"  name="ddlConsumptionRate" value="160">160 grams per day - half of the USDA recommended daily protein intake<br>
+			<input type="radio"  name="ddlConsumptionRate" value="175">175 grams per day - Northwest Tribes<br>
+			<input type="radio"  name="ddlConsumptionRate" value='-999'> 
+			<INPUT id="ddlManualConsumptionRate" onkeypress="return isNumberKey(event)" 
+				   type="text" name="ddlManualConsumptionRate" disabled></INPUT> grams per day<br>
+
+		
+	</div>
+	<div style="display:inline-block; width:20px;"></div>
+	<div style="display:inline-block; ">
+		<strong>Cancer Risk Level</strong><br>
+			<input type="radio" id="CancerRisk" name="cancer_risk" value="5">1 in 100,000 people (10<sup>-5</sup>)<br>
+			<input type="radio" id="CancerRisk" name="cancer_risk" checked="checked" value="6">1 in 1,000,000 people (10<sup>-6</sup>)<br>
+			<input type="radio" id="CancerRisk" name="cancer_risk" value="7">1 in 10,000,000 people (10<sup>-7</sup>)<br>
+	</div>	
+<p>
+<p>
+	<!-- this section exposes extra columns that show the values exactly as they are in the excel files.  it is useful for QA/QC -->
+	<!--
+
+	<div style="width=70%">
+		Select columns to display:
+		<ul>
+			<li><input type="checkbox" class="cb-colDisplay"  checked="checked" name="options[]" column-index="3" />Federal Criteria</a>
+			<li><input type="checkbox" class="cb-colDisplay"  name="options[]" column-index="5" />Fish Consumption of 22 grams/day (excel value)</a>
+			<li><input type="checkbox" class="cb-colDisplay"    name="options[]" column-index="7" />Fish Consumption of 142.4 grams/day (excel value)</a>
+			<li><input type="checkbox" class="cb-colDisplay"    name="options[]" column-index="9" />Fish Consumption of 160 grams/day (excel value)</a>	    
+			<li><input type="checkbox" class="cb-colDisplay"    name="options[]" column-index="11" />Fish Consumption of 175 grams/day (excel value)</a>	    
+			<li><input type="checkbox" class="cb-colDisplay"   checked="checked" name="options[]" column-index="13" />Fish Consumption (javascript computed)</a>	    
+		</ul>    
+	</div>
+	-->
+
+	<div id="flash" style="display:none">
+		<table id="CriteriaTable" class="cell-border compact stripe hover" style="font-family: Tahoma,Geneva,Verdana,sans-serif; font-size: 87.5%;">
+			 <thead>
+				<tr>
+					 <th>&nbsp;</th>
+					 <th>&nbsp;</th>
+					 <th>&nbsp;</th>
+					 <th colspan=2 >National<br>Recommended<br>Water Quality Criteria</th>
+					 <th colspan=2 ><div id='computed_label' style="display: inline-block;">22</div></th>
+				</tr>
+				<tr>
+					 <th>#</th>
+					 <th >Pollutant</th>
+					 <th >CAS<br>Number</th>
+					 <th  style="text-align: center">Water + Organism<br>(&micro;g/L)</th>
+					 <th  style="text-align: center">Organism Only<br>(&micro;g/L)</th>
+					 <th style="text-align: center">Water + Organism<br>(&micro;g/L)</th>
+					 <th  style="text-align: center">Organism Only<br>(&micro;g/L)</th> 
+				</tr>
+			</thead>
+			<!--
+			<thead>
+				<tr>
+					 <th>#</th>
+					 <th >Pollutant</th>
+					 <th >CAS<br>Number</th>
+					 <th  style="text-align: center">Federal<br>Criteria<br>Water +<br>Organism<br>(&micro;g/L)</th>
+					 <th  style="text-align: center">Federal Criteria<br>Organism Only<br>(&micro;g/L)</th>
+					 <th  style="text-align: center"><div id='computed_label' style="display: inline-block;">22</div><br>Water + Organism<br>(&micro;g/L)</th>
+					 <th  style="text-align: center"><div id='computed_label2' style="display: inline-block;">22</div><br>Organism<br>(&micro;g/L)</th> 
+				</tr>
+			</thead>-->			
+			<tfoot class="footer-items">
+				<tr>
+					<td colspan='7' style="text-align: left">
+					<p><strong>Footnotes to Human Health Criteria table:</strong></p>
+					<ol type="a">
+						<li>EPA has issued a Maximum Contaminant Level (MCL) for this chemical which may be more stringent. See&nbsp;<a href="https://www.epa.gov/dwstandardsregulations">EPA's National Primary Drinking Water Regulations</a>.</li>
+						<li>This criterion is based on carcinogenicity of 10<sup>-6</sup> Alternate risk levels may be obtained by moving the decimal point (<em>e.g.</em>, for a risk level of 10<sup>-5</sup>, move the decimal point in the recommended criterion one place to the right).</li>
+						<li>The criterion for organoleptic (taste and order) effects may be more stringent. See&nbsp;<a href="https://www.epa.gov/wqc/national-recommended-water-quality-criteria-organoleptic-effects">National Recommended Water Quality Criteria - Organoleptic Effects</a>.</li>
+						<li>This criterion was revised to reflect EPA's q1* or RfD as contained in the <a href="https://www.epa.gov/iris">Integrated Risk Information System (IRIS)</a> as of May 17, 2002. The fish tissue bioconcentration factor (BCF) is from the 1980 Ambient Water Quality Criteria document.</li>
+						<li>This human health criterion is the same as originally published in the <a href="http://nepis.epa.gov/Exe/ZyPDF.cgi?Dockey=2000IYMP.txt">Quality Criteria for Water, 1976 ("Red Book")</a> which predates the 1980 methodology and did not utilize the fish ingestion BCF approach. This same criterion value is published in the&nbsp;<a href="http://nepis.epa.gov/Exe/ZyPDF.cgi?Dockey=00001MGA.txt">Quality Criteria for Water, 1986 ("Gold Book")</a>.</li>
+						<li>The&nbsp;Human Health for the consumption of&nbsp;Water + Organism criterion for manganese is not based on toxic effects, but rather is intended to minimize objectionable qualities such as laundry stains and objectionable tastes in beverages.</li>
+						<li>This fish tissue residue criterion for methylmercury is based on the total fish consumption rate.</li>
+						<li>This criterion applies to total PCBs (<em>g.</em>, the sum of all congener or all isomer or homolog or Aroclor analyses).</li>
+					</ol>
+					</td>
+				</tr>
+			</tfoot>
+
+			<!-- note: table rows are added using the jquery datatables using the script loaded below -->
+		</table>
+	</div> <!-- flash -->
+	
+	<!-- now load the javsscript that does creates and manages the calculator table and form elements -->
+	<script type="text/javascript" src="index.js"></script>
+</body>
+
+</html>
