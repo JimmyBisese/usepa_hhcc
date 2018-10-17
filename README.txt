@@ -7,3 +7,10 @@ Human health ambient water quality criteria represent specific levels of chemica
 
 
 Javascript app using jquery datatables
+
+This is a very simple javascript app - with the caveat that there was limited budget for making it reusable.  The equations used for the
+calculations were in a set of excel files, and no one had a good idea of where they came from.  Rather than figure out the data system, I figured out
+how to just use a a string containing the equations and replace the variable names with the values for each criteria, and then 'eval' it.  Its complicated
+to look at, but it works and is plenty fast enough.
+
+To fix it, I would ...
